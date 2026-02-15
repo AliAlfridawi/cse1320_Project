@@ -1,7 +1,11 @@
-#include "sqlite/sqlite.h"
-#include <sqlite3.h> 
+#include "sqlite/sqlite3.h"
+#include <stdio.h>
+
 // TESTING SQLITE3 CODE FROM GEEKSFORGEEKS
 // Callback function to print results from a SELECT query
+// To comple run: gcc example.c sqlite/sqlite3.c -o testRun.exe
+// Then execute: ./testRun.exe
+
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
     for(int i = 0; i < argc; i++) {
         printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
