@@ -1,0 +1,60 @@
+#include "sqlite/sqlite.h"
+#include <sqlite3.h> 
+// TESTING SQLITE3 CODE FROM GEEKSFORGEEKS
+// Callback function to print results from a SELECT query
+static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+    for(int i = 0; i < argc; i++) {
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    }
+    printf("\n");
+    return 0;
+}
+
+int main(int argc, char* argv[]) {
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
+
+    // 1. Open database (it will create 'dummy.db' if it doesn't exist)
+    rc = sqlite3_open("dummy.db", &db);
+
+    if(rc) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return(0);
+    } else {
+        fprintf(stdout, "Opened database successfully\n");
+    }
+
+    // 2. Create SQL statement to Create Table
+    char *sql = "CREATE TABLE IF NOT EXISTS users ("  \
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," \
+                "name TEXT NOT NULL," \
+                "age INTEGER NOT NULL);" \
+                /* Insert a dummy row immediately after creating */
+                "INSERT INTO users (name, age) VALUES ('Alice', 30);";
+
+    // 3. Execute SQL statement
+    rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
+
+    if(rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else {
+        fprintf(stdout, "Table created and data inserted successfully\n");
+    }
+
+    // 4. Query the data to verify
+    const char* query = "SELECT * from users";
+    printf("--- Current Database Contents ---\n");
+    rc = sqlite3_exec(db, query, callback, 0, &zErrMsg);
+
+    if(rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to select data: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+
+    // 5. Close database
+    sqlite3_close(db);
+
+    return 0;
+}
