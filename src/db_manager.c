@@ -1,28 +1,28 @@
 /*
     Author: Ali Alfridawi
-    Purpose: Create Database
+    Purpose: Initialize Database, create tables, and manage connections
 */
 
 #include <stdio.h>
-#include "sqlite/sqlite3.h"
+#include <stdlib.h> 
+#include "../sqlite/sqlite3.h"
 
-void createDB() {
+void db_initialize()
+{
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
 
-    rc = sqlite3_open("dummy.db", &db);
+    rc = sqlite3_open("clarity.db", &db);
 
     if(rc) {
         fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         return; 
-    }
-    else
-    {
+    } else {
         fprintf(stdout, "Opened database successfully\n");
     }
 
-    // Enable Foreign Keys (Crucial for SQLite constraints to work)
+    // Enable Foreign Keys
     sqlite3_exec(db, "PRAGMA foreign_keys = ON;", 0, 0, 0);
 
     // USERS TABLE
@@ -33,15 +33,12 @@ void createDB() {
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 
     rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
-    
     if(rc != SQLITE_OK) {
         fprintf(stderr, "Users SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
-    } else {
-        fprintf(stdout, "Users table created successfully\n");
     }
 
-    // RESTAURANTS TABLE (Fixed spelling: resturant -> restaurant)
+    // RESTAURANTS TABLE
     sql = "CREATE TABLE IF NOT EXISTS restaurants (" \
             "restaurant_id INTEGER PRIMARY KEY AUTOINCREMENT," \
             "restaurant_name VARCHAR(100) NOT NULL," \
@@ -51,8 +48,6 @@ void createDB() {
     if(rc != SQLITE_OK) {
         fprintf(stderr, "Restaurants SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
-    } else {
-        fprintf(stdout, "Restaurants table created successfully\n");
     }
 
     // USER ACCESS TABLE
@@ -68,8 +63,6 @@ void createDB() {
     if(rc != SQLITE_OK) {
         fprintf(stderr, "Access SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
-    } else {
-        fprintf(stdout, "Access table created successfully\n");
     }
 
     // INVENTORY TABLE
@@ -85,24 +78,86 @@ void createDB() {
     if(rc != SQLITE_OK) {
         fprintf(stderr, "Inventory SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
-    } else {
-        fprintf(stdout, "Inventory table created successfully\n");
     }
     
-    // Usage Log TABLE
-    sql = "CREATE TABLE usage_log (log_id INTEGER PRIMARY KEY AUTOINCREMENT, item_id INT, quantity_used DECIMAL(10,2), log_timestamp DATETIME NOT NULL);";
+    // Usage Log TABLE (FIXED: Added IF NOT EXISTS)
+    sql = "CREATE TABLE IF NOT EXISTS usage_log (" \
+          "log_id INTEGER PRIMARY KEY AUTOINCREMENT, " \
+          "item_id INT, " \
+          "quantity_used DECIMAL(10,2), " \
+          "log_timestamp DATETIME NOT NULL);";
+
     rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
     if(rc != SQLITE_OK) {
         fprintf(stderr, "Usage Log SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
-    } else {
-        fprintf(stdout, "Usage Log table created successfully\n");
     }
 
     sqlite3_close(db);      
 }
 
-int main() {
-    createDB();
+int db_executeQuery(char* sql_command)
+{
+    sqlite3 *db; 
+    char *zErrMsg = 0;
+    int rc;
+
+    rc = sqlite3_open("clarity.db", &db);
+    if(rc) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return -1; 
+    }
+    
+    rc = sqlite3_exec(db, sql_command, 0, 0, &zErrMsg);
+    if(rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+        sqlite3_close(db);
+        return -1;
+    }
+    sqlite3_close(db);
+    return 0;
+}
+
+int db_fetchAllInventory(InventoryItem *items, int max_items)
+{
+    sqlite3 *db;
+    int rc; 
+
+    rc = sqlite3_open("clarity.db", &db);
+    if (rc != SQLITE_OK) { 
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return -1;
+    }
+
+    char *sql = "SELECT item_id, item_name, quantity, threshold FROM inventory;";
+
+    sqlite3_stmt *stmt;
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    
+    if(rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return -1;
+    }
+
+    while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        int item_id = sqlite3_column_int(stmt, 0);
+        const char *item_name = (const char *)sqlite3_column_text(stmt, 1);
+        int quantity = sqlite3_column_int(stmt, 2);
+        int threshold = sqlite3_column_int(stmt, 3);
+
+        printf("Item ID: %d, Name: %s, Quantity: %d, Threshold: %d\n", item_id, item_name, quantity, threshold);
+    }
+
+    if(rc != SQLITE_DONE) {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
     return 0;
 }
