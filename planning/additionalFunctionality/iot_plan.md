@@ -1,4 +1,9 @@
-# Detailed Plan for IoT Integration
+# Future Roadmap: IoT Integration
+
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Outline the potential integration of IoT devices with the Clarity system, focusing on real-time stock monitoring and automated data collection.
+---
 
 ## Objective
 To integrate IoT devices into the application for real-time data collection and remote control capabilities.

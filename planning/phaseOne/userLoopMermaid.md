@@ -1,3 +1,10 @@
+# User Flow Visualization: Mermaid Diagram
+
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Provide a visual representation of the application's user interface flow using Mermaid syntax to simplify the understanding of the system's logic and navigation.
+---
+
 ```mermaid
 graph TD
     A[App Start] --> B{Dashboard};

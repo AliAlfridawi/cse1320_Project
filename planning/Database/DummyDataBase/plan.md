@@ -1,4 +1,9 @@
-## Ali Alfridawi
+# Data Strategy: Dummy Database Implementation
+
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Detail the strategy for creating and using a mock/dummy database during development to ensure consistent testing and robust performance of the Clarity system.
+---
 
 # Plan
 

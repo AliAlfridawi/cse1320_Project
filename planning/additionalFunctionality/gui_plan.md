@@ -1,5 +1,10 @@
 # Detailed Plan for C-Based GUI Implementation
 
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Explore future development plans for upgrading the Clarity Inventory Management System with a Graphical User Interface to improve usability and visual appeal.
+---
+
 ## 1. Objective
 To build a user-friendly and feature-rich Graphical User Interface (GUI) for the Inventory Management System **using only the C language and C-compatible libraries**. This plan replaces the original terminal-based presentation layer with a full graphical interface, including data visualization.
 

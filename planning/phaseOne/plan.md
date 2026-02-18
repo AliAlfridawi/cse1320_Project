@@ -1,5 +1,10 @@
 # Project Clarity: Phase 1 Architecture & Implementation Plan
 
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Define the core architectural design and implementation strategy for the Clarity Inventory Management System, focusing on a robust, modular, and maintainable 3-Layer Architecture.
+---
+
 **Project Name:** Clarity  
 **Description:** A terminal-based Inventory Management System (IMS) for small restaurants.  
 **Tech Stack:** C (Standard C99/C11), MySQL.  

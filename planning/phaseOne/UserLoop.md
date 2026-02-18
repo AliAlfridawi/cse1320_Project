@@ -1,5 +1,10 @@
 # User Loop & UI Flow Plan
 
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Outline the interactive flow and logical progression of the user interface, ensuring a seamless and intuitive experience for the end-user of the Clarity system.
+---
+
 ## 1. Objective
 This document outlines the primary user loop for the C-based GTK+ application. The flow is designed to be simple, efficient, and focused on the core daily tasks of a restaurant owner: quickly identifying low-stock items and updating inventory levels. Complex features like analytics and the chatbot are excluded from this primary loop for clarity and focus.
 

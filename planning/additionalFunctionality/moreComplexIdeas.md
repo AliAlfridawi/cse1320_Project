@@ -1,3 +1,10 @@
+# Conceptual Brainstorming: Advanced Features
+
+---
+**Authors:** Ali Alfridawi & Gemini (AI Assistant)  
+**Purpose:** Document advanced feature ideas and complex system expansions to guide the long-term evolution of the Clarity project beyond its initial MVP.
+---
+
 1. Data Export (Reporting)	Export inventory logs to a timestamped .csv file for Excel compatibility.	
 File I/O: Requires mastering fopen, fprintf, and managing file permissions/paths strings manually.	3/10 (Low)
 2. Role-Based Access Control (RBAC)	Different menus for "Admins" (can delete users/items) vs. "Staff" (can only update stock).	

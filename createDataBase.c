@@ -89,6 +89,16 @@ void createDB() {
         fprintf(stdout, "Inventory table created successfully\n");
     }
     
+    // Usage Log TABLE
+    sql = "CREATE TABLE usage_log (log_id INTEGER PRIMARY KEY AUTOINCREMENT, item_id INT, quantity_used DECIMAL(10,2), log_timestamp DATETIME NOT NULL);";
+    rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
+    if(rc != SQLITE_OK) {
+        fprintf(stderr, "Usage Log SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else {
+        fprintf(stdout, "Usage Log table created successfully\n");
+    }
+
     sqlite3_close(db);      
 }
 
