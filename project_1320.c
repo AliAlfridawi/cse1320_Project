@@ -7,24 +7,30 @@
 
 // ===== STRUCTS =====
 
-struct Ingredient {
+typedef struct Ingredient {
     char name[30];
     int quantity;
     int threshold;
-};
+} Ingredient;
 
-struct MenuItem {
+typedef struct MenuItem {
     char name[30];
     int quantity;
-};
+    float price;
+} MenuItem;
+
+typedef struct Cart {
+    int items[MAX_MENU_ITEMS]; // an array of the counts of items in cart
+} Cart;
 
 // ===== GLOBAL DATA =====
 
-struct Ingredient inventory[MAX_INGREDIENTS];
-struct MenuItem menu[MAX_MENU_ITEMS];
+Ingredient sInventory[MAX_INGREDIENTS];
+MenuItem sMenu[MAX_MENU_ITEMS];
+Cart sCart;
 
-int inventoryCount = 0;
-int menuCount = 0;
+int sInventoryCount = 0;
+int sMenuCount = 0;
 
 // ===== FUNCTION DECLARATIONS =====
 
@@ -41,7 +47,12 @@ void showMenuItems();
 void addMenuItem();
 void restockMenu();
 
-void buyItem();
+void BuyItem();
+
+void ViewCart();
+void AddToCart();
+void RemoveFromCart();
+float DetermineTotalPrice();
 
 // ===== FUNCTIONS =====
 
@@ -74,11 +85,11 @@ void mainMenu() {
         switch (choice) {
             case 1: inventoryMenu(); break;
             case 2: menuMenu(); break;
-            case 3: buyItem(); break;
+            case 3: BuyItem(); // no break statement to allow fallthrough
             case 4: printf("Exiting system...\n"); break;
             default: printf("Invalid choice.\n");
         }
-    } while (choice != 4);
+    } while (choice != 3 && choice != 4);
 }
 
 // ---------------- INVENTORY ----------------
@@ -105,41 +116,41 @@ void inventoryMenu() {
 
 void showInventory() {
     printf("\nIngredient\tQty\tThreshold\n");
-    for (int i = 0; i < inventoryCount; i++) {
+    for (int i = 0; i < sInventoryCount; i++) {
         printf("%s\t\t%d\t%d\n",
-            inventory[i].name,
-            inventory[i].quantity,
-            inventory[i].threshold
+            sInventory[i].name,
+            sInventory[i].quantity,
+            sInventory[i].threshold
         );
     }
 }
 
 void addIngredient() {
-    if (inventoryCount >= MAX_INGREDIENTS) {
+    if (sInventoryCount >= MAX_INGREDIENTS) {
         printf("Inventory full.\n");
         return;
     }
 
     printf("Enter ingredient name: ");
-    scanf("%s", inventory[inventoryCount].name);
+    scanf("%s", sInventory[sInventoryCount].name);
 
     printf("Enter quantity: ");
-    scanf("%d", &inventory[inventoryCount].quantity);
+    scanf("%d", &sInventory[sInventoryCount].quantity);
 
     printf("Enter restock threshold: ");
-    scanf("%d", &inventory[inventoryCount].threshold);
+    scanf("%d", &sInventory[sInventoryCount].threshold);
 
-    inventoryCount++;
+    sInventoryCount++;
     printf("Ingredient added!\n");
 }
 
 void restockInventory() {
     printf("\nItems needing restock:\n");
-    for (int i = 0; i < inventoryCount; i++) {
-        if (inventory[i].quantity < inventory[i].threshold) {
+    for (int i = 0; i < sInventoryCount; i++) {
+        if (sInventory[i].quantity < sInventory[i].threshold) {
             printf("%s (Qty: %d)\n",
-                inventory[i].name,
-                inventory[i].quantity
+                sInventory[i].name,
+                sInventory[i].quantity
             );
         }
     }
@@ -169,46 +180,97 @@ void menuMenu() {
 
 void showMenuItems() {
     printf("\nItem\tQty\n");
-    for (int i = 0; i < menuCount; i++) {
-        printf("%s\t%d\n", menu[i].name, menu[i].quantity);
+    for (int i = 0; i < sMenuCount; i++) {
+        printf("%s\t%d\t%f\n", sMenu[i].name, sMenu[i].quantity, sMenu[i].price);
     }
 }
 
 void addMenuItem() {
-    if (menuCount >= MAX_MENU_ITEMS) {
+    if (sMenuCount >= MAX_MENU_ITEMS) {
         printf("Menu full.\n");
         return;
     }
 
     printf("Enter item name: ");
-    scanf("%s", menu[menuCount].name);
+    scanf("%s", sMenu[sMenuCount].name);
 
     printf("Enter quantity: ");
-    scanf("%d", &menu[menuCount].quantity);
+    scanf("%d", &sMenu[sMenuCount].quantity);
 
-    menuCount++;
+    printf("Enter item price: ");
+    scanf("%f", &sMenu[sMenuCount].price);
+
+    sMenuCount++;
     printf("Menu item added!\n");
 }
 
 void restockMenu() {
     printf("\nMenu items needing restock (qty < 5):\n");
-    for (int i = 0; i < menuCount; i++) {
-        if (menu[i].quantity < 5) {
-            printf("%s (Qty: %d)\n", menu[i].name, menu[i].quantity);
+    for (int i = 0; i < sMenuCount; i++) {
+        if (sMenu[i].quantity < 5) {
+            printf("%s (Qty: %d)\n", sMenu[i].name, sMenu[i].quantity);
         }
     }
 }
 
 // ---------------- BUYING ----------------
 
-void buyItem() {
+void BuyItem() {
+    int choice;
+
+    do {
+        printf("\n--- Cart ---\n");
+        printf("1. View Cart\n");
+        printf("2. Add to Cart\n");
+        printf("3. Remove from Cart\n");
+        printf("4. View Menu Items\n");
+        printf("5. Buy and Complete Transaction\n");
+        printf("Choose: ");
+        scanf("%d", &choice);
+
+
+        switch (choice) {
+            case 1: {
+                ViewCart();
+                break;
+            }
+
+            case 2: {
+                AddToCart();
+                break;
+            }
+
+            case 3: {
+                RemoveFromCart();
+                break;
+            }
+
+            case 4: {
+                showMenuItems();
+                break;
+            }
+        }
+    } while (choice != 5);
+
+
+    printf("Total price: %.2f\n", DetermineTotalPrice());
+}
+
+void ViewCart() {
+    printf("\nItem\tQty\n");
+    
+    for (int i = 0; i < sMenuCount; i++) {
+        printf("%s\t%d\t%f\n", sMenu[i].name, sCart.items[i], sMenu[i].price);
+    }
+}
+
+void AddToCart() {
     int choice, qty;
 
-    showMenuItems();
-    printf("\nChoose item number (1-%d): ", menuCount);
+    printf("Enter item number (1-%d): ", sMenuCount);
     scanf("%d", &choice);
 
-    if (choice < 1 || choice > menuCount) {
+    if (choice < 1 || choice > sMenuCount) {
         printf("Invalid choice.\n");
         return;
     }
@@ -216,12 +278,52 @@ void buyItem() {
     printf("Enter quantity to buy: ");
     scanf("%d", &qty);
 
-    if (qty > menu[choice - 1].quantity) {
+    if (qty > sMenu[choice - 1].quantity) {
         printf("Not enough items available.\n");
     } else {
-        menu[choice - 1].quantity -= qty;
-        printf("Purchase successful!\n");
+        sMenu[choice - 1].quantity -= qty;
+        sCart.items[choice - 1] += qty;
     }
+}
+
+void RemoveFromCart() {
+    int choice, qty;
+
+    printf("Enter item number (1-%d): ", sMenuCount);
+    scanf("%d", &choice);
+
+    if (choice < 1 || choice > sMenuCount) {
+        printf("Invalid choice.\n");
+        return;
+    }
+
+    printf("Enter quantity to remove: ");
+    scanf("%d", &qty);
+
+    if (qty < 0) {
+        printf("Invalid quantity.\n");
+        return;
+    }
+    
+    if (qty >= sCart.items[choice - 1]) {
+        printf("Removing all items.\n");
+        qty = sCart.items[choice - 1]; // clamp the item count  
+    }
+    
+    sMenu[choice - 1].quantity += qty;
+    sCart.items[choice - 1] -= qty;   
+
+    printf("Removed %d items from cart\n", qty);
+}
+
+float DetermineTotalPrice() {
+    float total = 0.0f;
+
+    for (int i = 0; i < sMenuCount; i++) {
+        total += (float)sCart.items[i] * sMenu[i].price;
+    }
+
+    return total;
 }
 
 // ---------------- MAIN ----------------
