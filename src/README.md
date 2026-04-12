@@ -4,18 +4,23 @@ This directory contains the C implementation of the Bakery Management System. Th
 
 ## System Architecture Overview
 
-The system is orchestrated by `main.c`, which handles the initial login and the top-level CLI menu. Each functional area (Inventory, Menu, Cart) is a self-contained module with its own data structures and business logic.
+The system is orchestrated by `main.c`, which handles the initial login and the top-level CLI menu. Each functional area (Inventory, Menu, Cart, Storage) is a self-contained module with its own data structures and business logic.
 
 ### Module Breakdown
 
 #### `main.c`
-The entry point of the application. It contains the `login()` function and the `mainMenu()` loop, delegating specific functionality to the other modules.
+The entry point of the application. It contains the `login()` function and the `mainMenu()` loop, delegating specific functionality to the other modules. It also triggers data loading on startup and saving on exit.
 
 #### `common.h`
 A central header file that defines project-wide constants and macros.
 *   `MAX_INGREDIENTS`: The maximum number of ingredients the inventory can track.
 *   `MAX_MENU_ITEMS`: The maximum number of products in the bakery menu.
 *   `PASSWORD`: The default administrative password (`bakery123`).
+
+#### `storage.c` / `storage.h`
+Manages the persistent storage of data across application sessions.
+*   **Key Functions:** `loadData()`, `saveData()`.
+*   **Data Files:** Reads from and writes to `inventory.txt` and `menu.txt` using CSV formats.
 
 #### `inventory.c` / `inventory.h`
 Manages the raw materials (ingredients) required for the bakery.
@@ -37,9 +42,11 @@ The "Point of Sale" logic for the bakery.
 ## Data Flow & State Management
 
 The system maintains a global state for simplicity, with external variables defined in the headers and instantiated in the source files (e.g., `sInventory`, `sMenu`, `sCart`).
-1.  **Selection:** User selects items from the `menuMenu()`.
-2.  **Cart Mutation:** Items are added to the `sCart` via `AddToCart()`.
-3.  **Checkout:** `BuyItem()` triggers the checkout process, which uses `DetermineTotalPrice()` to calculate the final amount.
+1.  **Initialization:** Data is loaded from CSV files via `loadData()` into `sInventory` and `sMenu`.
+2.  **Selection:** User selects items from the `menuMenu()`.
+3.  **Cart Mutation:** Items are added to the `sCart` via `AddToCart()`.
+4.  **Checkout:** `BuyItem()` triggers the checkout process, which uses `DetermineTotalPrice()` to calculate the final amount.
+5.  **Termination:** Data is saved back to CSV files via `saveData()` before exiting.
 
 ## Developer Guidelines
 

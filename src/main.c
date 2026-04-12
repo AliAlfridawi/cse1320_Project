@@ -4,6 +4,7 @@
 #include "inventory.h"
 #include "menu.h"
 #include "cart.h"
+#include "storage.h"
 
 int login() {
     char input[20];
@@ -45,6 +46,8 @@ int main() {
         return 0;
     }
 
+    loadData();
     mainMenu();
+    saveData();
     return 0;
 }
