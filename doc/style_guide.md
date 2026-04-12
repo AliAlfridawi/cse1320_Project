@@ -21,19 +21,18 @@ This document outlines the coding standards for the Bakery Management System pro
     - Example: `typedef struct MenuItem { ... } MenuItem;`
 - **Global Variables:** Use `camelCase` with an `s` prefix to indicate static/global state.
     - Example: `Ingredient sInventory[MAX_INGREDIENTS];`
-- **Functions:** Use `camelCase`.
-    - Example: `void showInventory();`, `void mainMenu();`
-    - *Note:* Existing `PascalCase` functions (e.g., `BuyItem`) should be refactored to `camelCase` for consistency.
+- **Functions:** Use `camelCase` as the standard for all functions.
+    - Example: `showInventory()`, `mainMenu()`, `inventoryMenu()`
+    - *Legacy PascalCase functions (e.g., `BuyItem`) were retained for compatibility with the final prototype.*
 - **Local Variables:** Use `camelCase`.
     - Example: `int choice;`, `float total;`
 
 ## Comments and Documentation
 - Use `//` for single-line comments.
 - Use `/* ... */` for multi-line comments.
-- Use section headers to group related functions.
-    - Example: `// ---------------- INVENTORY ----------------`
+- Use section headers to group related functions within files.
 
 ## Best Practices
-- Initialize variables.
-- Check bounds for arrays (e.g., `MAX_MENU_ITEMS`).
-- Prefer descriptive variable names over single letters (except for loop counters).
+- Initialize variables upon declaration.
+- Rigorously check bounds for all static arrays.
+- Use descriptive variable names (e.g., `inventoryCount` instead of `ic`).

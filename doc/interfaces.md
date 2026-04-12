@@ -1,20 +1,22 @@
 # Internal Interfaces (API)
 
-This document defines the contracts between the planned modules.
+This document defines the interface and functionality provided by each module in the Bakery Management System.
 
 ## Inventory Module (`inventory.h`)
-- `void inventory_init()`: Initialize the inventory list.
-- `void inventory_add(const char* name, int qty, int threshold)`: Add a new ingredient.
-- `void inventory_show()`: Print the current inventory to the terminal.
-- `int inventory_get_qty(const char* name)`: Return the current quantity of an ingredient.
+- `void inventoryMenu()`: Displays and handles the inventory-related user menu.
+- `void showInventory()`: Prints all current items and their status to the terminal.
+- `void addIngredient()`: Prompts the user to add a new ingredient type to the inventory.
+- `void restockInventory()`: Identifies and lists ingredients that have fallen below their restock threshold.
 
 ## Menu Module (`menu.h`)
-- `void menu_add(const char* name, int qty, float price)`: Add a new menu item.
-- `void menu_show()`: Print the current menu.
-- `MenuItem* menu_get_item(int id)`: Return a pointer to a menu item by ID.
+- `void menuMenu()`: Displays and handles the menu-item-related management interface.
+- `void showMenuItems()`: Lists all items currently available for sale, including their price and quantity.
+- `void addMenuItem()`: Adds a new product to the sale menu.
+- `void restockMenu()`: Shows menu items that need restocking based on a pre-defined low-stock limit.
 
 ## Cart Module (`cart.h`)
-- `void cart_clear()`: Reset the cart.
-- `int cart_add_item(int itemId, int qty)`: Add a specific quantity of an item to the cart. Returns status code.
-- `int cart_remove_item(int itemId, int qty)`: Remove a specific quantity from the cart. Returns status code.
-- `float cart_calculate_total()`: Iterate through cart items and calculate the total price based on the Menu prices.
+- `void BuyItem()`: Orchestrates the customer purchase process, providing the buying-menu loop.
+- `void ViewCart()`: Shows current cart contents, along with prices and calculated totals.
+- `void AddToCart()`: Increments item quantities in the cart while decrementing from the main menu stock.
+- `void RemoveFromCart()`: Decrements items from the cart and returns them to the available menu stock.
+- `float DetermineTotalPrice()`: Calculates the final cost for all items currently in the cart.

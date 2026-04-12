@@ -1,32 +1,29 @@
 # Architecture Documentation
 
-## Current State: Monolithic Structure
-Currently, all logic is contained within `project_1320.c`. This includes:
-- UI / Menu handling
-- Inventory management
-- Menu item management
-- Shopping cart logic
-- Data structures
+The Bakery Management System is built using a modular architecture to ensure scalability and ease of maintenance.
 
-## Target Architecture: Modular Design
-To improve maintainability and scalability, the project will be refactored into the following modules:
+## System Architecture: Modular Design
+
+The codebase is split into several logical modules, each responsible for a distinct part of the application:
 
 ### 1. `main.c`
-- Entry point of the application.
-- Top-level menu loop.
+- Program entry point and top-level user interface.
 - Orchestrates between other modules.
 
 ### 2. `inventory.h / inventory.c`
 - Data structures: `Ingredient`
-- Logic: Adding, restocking, and viewing raw ingredients.
+- Logic: Functions for managing ingredients (adding, restocking, and viewing).
 
 ### 3. `menu.h / menu.c`
 - Data structures: `MenuItem`
-- Logic: Managing the bakery's sale items.
+- Logic: Functions for managing the bakery's sale items.
 
 ### 4. `cart.h / cart.c`
 - Data structures: `Cart`
-- Logic: Adding/removing items from the cart, calculating totals.
+- Logic: Functions for managing the customer's shopping cart (adding/removing items and calculating totals).
+
+### 5. `common.h`
+- Shared global constants and configurations (e.g., `MAX_INGREDIENTS`, `MAX_MENU_ITEMS`, `PASSWORD`).
 
 ## Data Structures
 - **Ingredient**: `{char name[30], int quantity, int threshold}`
