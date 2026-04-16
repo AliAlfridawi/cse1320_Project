@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "cart.h"
 #include "menu.h"
 
@@ -6,6 +7,8 @@ Cart sCart;
 
 void BuyItem() {
     int choice;
+
+    memset(&sCart, 0, sizeof(Cart));
 
     do {
         printf("\n--- Cart ---\n");
@@ -61,6 +64,11 @@ void AddToCart() {
 
     printf("Enter quantity to buy: ");
     scanf("%d", &qty);
+
+    if (qty <= 0) {
+        printf("Invalid quantity.\n");
+        return;
+    }
 
     if (qty > sMenu[choice - 1].quantity) {
         printf("Not enough items available.\n");

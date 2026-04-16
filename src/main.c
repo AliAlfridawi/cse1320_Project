@@ -33,11 +33,11 @@ void mainMenu() {
         switch (choice) {
             case 1: inventoryMenu(); break;
             case 2: menuMenu(); break;
-            case 3: BuyItem(); // no break statement to allow fallthrough
+            case 3: BuyItem(); break;
             case 4: printf("Exiting system...\n"); break;
             default: printf("Invalid choice.\n");
         }
-    } while (choice != 3 && choice != 4);
+    } while (choice != 4);
 }
 
 int main() {
