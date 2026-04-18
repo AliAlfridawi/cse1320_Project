@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "menu.h"
 
 MenuItem sMenu[MAX_MENU_ITEMS];
@@ -25,36 +26,58 @@ void menuMenu() {
 }
 
 void showMenuItems() {
-    printf("\nItem\tQty\tPrice\n");
+    printf("\n+----------------------+-------+------------+\n");
+    printf("| Item                 | Qty   | Price      |\n");
+    printf("+----------------------+-------+------------+\n");
     for (int i = 0; i < sMenuCount; i++) {
-        printf("%s\t%d\t%f\n", sMenu[i].name, sMenu[i].quantity, sMenu[i].price);
+        printf("| %-20s | %-5d | $ %8.2f |\n", sMenu[i].name, sMenu[i].quantity, sMenu[i].price);
     }
+    printf("+----------------------+-------+------------+\n");
 }
 
 void addMenuItem() {
-    if (sMenuCount >= MAX_MENU_ITEMS) {
-        printf("Menu full.\n");
-        return;
-    }
+    char name[30];
+    int quantity;
+    int foundIndex = -1;
 
     printf("Enter item name: ");
-    scanf("%s", sMenu[sMenuCount].name);
+    scanf("%s", name);
 
-    printf("Enter quantity: ");
-    scanf("%d", &sMenu[sMenuCount].quantity);
+    for (int i = 0; i < sMenuCount; i++) {
+        if (strcmp(sMenu[i].name, name) == 0) {
+            foundIndex = i;
+            break;
+        }
+    }
 
-    printf("Enter item price: ");
-    scanf("%f", &sMenu[sMenuCount].price);
-
-    sMenuCount++;
-    printf("Menu item added!\n");
+    if (foundIndex != -1) {
+        printf("Item already exists. Enter quantity to add: ");
+        scanf("%d", &quantity);
+        sMenu[foundIndex].quantity += quantity;
+        printf("Menu item restocked!\n");
+    } else {
+        if (sMenuCount >= MAX_MENU_ITEMS) {
+            printf("Menu full.\n");
+            return;
+        }
+        strcpy(sMenu[sMenuCount].name, name);
+        printf("Enter quantity: ");
+        scanf("%d", &sMenu[sMenuCount].quantity);
+        printf("Enter item price: ");
+        scanf("%f", &sMenu[sMenuCount].price);
+        sMenuCount++;
+        printf("Menu item added!\n");
+    }
 }
 
 void restockMenu() {
-    printf("\nMenu items needing restock (qty < 5):\n");
+    printf("\n+----------------------+-------+\n");
+    printf("| Needs Restock (< 5)  | Qty   |\n");
+    printf("+----------------------+-------+\n");
     for (int i = 0; i < sMenuCount; i++) {
         if (sMenu[i].quantity < 5) {
-            printf("%s (Qty: %d)\n", sMenu[i].name, sMenu[i].quantity);
+            printf("| %-20s | %-5d |\n", sMenu[i].name, sMenu[i].quantity);
         }
     }
+    printf("+----------------------+-------+\n");
 }

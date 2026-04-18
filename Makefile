@@ -23,4 +23,10 @@ clean:
 	@if exist "$(OBJ_DIR)" rmdir /s /q $(OBJ_DIR)
 	@if exist "$(TARGET)" del $(TARGET)
 
-.PHONY: all clean
+format:
+	clang-format -i $(SRCS) $(HDRS)
+
+lint:
+	clang-tidy $(SRCS) -- $(CFLAGS) -I$(SRC_DIR)
+
+.PHONY: all clean format lint

@@ -16,7 +16,7 @@ This document defines the interface and functionality provided by each module in
 
 ## Cart Module (`cart.h`)
 - `void BuyItem()`: Orchestrates the customer purchase process, providing the buying-menu loop.
-- `void ViewCart()`: Shows current cart contents, along with prices and calculated totals.
-- `void AddToCart()`: Increments item quantities in the cart while decrementing from the main menu stock.
-- `void RemoveFromCart()`: Decrements items from the cart and returns them to the available menu stock.
-- `float DetermineTotalPrice()`: Calculates the final cost for all items currently in the cart.
+- `void viewCart()`: Shows current cart contents, along with prices and calculated totals.
+- `void addToCart()`: Increments item quantities in the cart while decrementing from the main menu stock.
+- `void removeFromCart()`: Decrements items from the cart and returns them to the available menu stock.
+- `float determineTotalPrice()`: Calculates the final cost for all items currently in the cart.

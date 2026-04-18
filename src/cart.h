@@ -9,10 +9,10 @@ typedef struct Cart {
 
 extern Cart sCart;
 
-void BuyItem();
-void ViewCart();
-void AddToCart();
-void RemoveFromCart();
-float DetermineTotalPrice();
+void BuyItem(); // Legacy exception
+void viewCart();
+void addToCart();
+void removeFromCart();
+float determineTotalPrice();
 
 #endif // CART_H

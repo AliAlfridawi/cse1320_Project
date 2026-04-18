@@ -22,15 +22,15 @@ void BuyItem() {
 
         switch (choice) {
             case 1: {
-                ViewCart();
+                viewCart();
                 break;
             }
             case 2: {
-                AddToCart();
+                addToCart();
                 break;
             }
             case 3: {
-                RemoveFromCart();
+                removeFromCart();
                 break;
             }
             case 4: {
@@ -40,10 +40,10 @@ void BuyItem() {
         }
     } while (choice != 5);
 
-    printf("Total price: %.2f\n", DetermineTotalPrice());
+    printf("Total price: %.2f\n", determineTotalPrice());
 }
 
-void ViewCart() {
+void viewCart() {
     printf("\nItem\tQty\tPrice\n");
     
     for (int i = 0; i < sMenuCount; i++) {
@@ -51,7 +51,7 @@ void ViewCart() {
     }
 }
 
-void AddToCart() {
+void addToCart() {
     int choice, qty;
 
     printf("Enter item number (1-%d): ", sMenuCount);
@@ -78,7 +78,7 @@ void AddToCart() {
     }
 }
 
-void RemoveFromCart() {
+void removeFromCart() {
     int choice, qty;
 
     printf("Enter item number (1-%d): ", sMenuCount);
@@ -108,7 +108,7 @@ void RemoveFromCart() {
     printf("Removed %d items from cart\n", qty);
 }
 
-float DetermineTotalPrice() {
+float determineTotalPrice() {
     float total = 0.0f;
 
     for (int i = 0; i < sMenuCount; i++) {

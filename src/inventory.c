@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "inventory.h"
 
 Ingredient sInventory[MAX_INGREDIENTS];
@@ -36,22 +37,38 @@ void showInventory() {
 }
 
 void addIngredient() {
-    if (sInventoryCount >= MAX_INGREDIENTS) {
-        printf("Inventory full.\n");
-        return;
-    }
+    char name[30];
+    int quantity;
+    int foundIndex = -1;
 
     printf("Enter ingredient name: ");
-    scanf("%s", sInventory[sInventoryCount].name);
+    scanf("%s", name);
 
-    printf("Enter quantity: ");
-    scanf("%d", &sInventory[sInventoryCount].quantity);
+    for (int i = 0; i < sInventoryCount; i++) {
+        if (strcmp(sInventory[i].name, name) == 0) {
+            foundIndex = i;
+            break;
+        }
+    }
 
-    printf("Enter restock threshold: ");
-    scanf("%d", &sInventory[sInventoryCount].threshold);
-
-    sInventoryCount++;
-    printf("Ingredient added!\n");
+    if (foundIndex != -1) {
+        printf("Ingredient already exists. Enter quantity to add: ");
+        scanf("%d", &quantity);
+        sInventory[foundIndex].quantity += quantity;
+        printf("Ingredient restocked!\n");
+    } else {
+        if (sInventoryCount >= MAX_INGREDIENTS) {
+            printf("Inventory full.\n");
+            return;
+        }
+        strcpy(sInventory[sInventoryCount].name, name);
+        printf("Enter quantity: ");
+        scanf("%d", &sInventory[sInventoryCount].quantity);
+        printf("Enter restock threshold: ");
+        scanf("%d", &sInventory[sInventoryCount].threshold);
+        sInventoryCount++;
+        printf("Ingredient added!\n");
+    }
 }
 
 void restockInventory() {
