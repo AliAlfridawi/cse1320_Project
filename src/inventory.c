@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "inventory.h"
+#include "storage.h"
 
 Ingredient sInventory[MAX_INGREDIENTS];
 int sInventoryCount = 0;
 
 void inventoryMenu() {
-    int choice;
+    int choice = 0;
 
     do {
         printf("\n--- INVENTORY MENU ---\n");
@@ -17,21 +18,38 @@ void inventoryMenu() {
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1: showInventory(); break;
-            case 2: addIngredient(); break;
-            case 3: restockInventory(); break;
+            case 1:
+                showInventory();
+                break;
+            case 2:
+                addIngredient();
+                break;
+            case 3:
+                restockInventory();
+                break;
+            case 4:
+                break;
+            default:
+                printf("Invalid choice.\n");
+                break;
         }
     } while (choice != 4);
 }
 
 void showInventory() {
+    int i;
+
+    if (sInventoryCount == 0) {
+        printf("\nNo inventory items available.\n");
+        return;
+    }
+
     printf("\nIngredient\tQty\tThreshold\n");
-    for (int i = 0; i < sInventoryCount; i++) {
+    for (i = 0; i < sInventoryCount; i++) {
         printf("%s\t\t%d\t%d\n",
             sInventory[i].name,
             sInventory[i].quantity,
-            sInventory[i].threshold
-        );
+            sInventory[i].threshold);
     }
 }
 
@@ -42,7 +60,7 @@ void addIngredient() {
     }
 
     printf("Enter ingredient name: ");
-    scanf("%s", sInventory[sInventoryCount].name);
+    scanf("%29s", sInventory[sInventoryCount].name);
 
     printf("Enter quantity: ");
     scanf("%d", &sInventory[sInventoryCount].quantity);
@@ -51,17 +69,30 @@ void addIngredient() {
     scanf("%d", &sInventory[sInventoryCount].threshold);
 
     sInventoryCount++;
+    saveData();
     printf("Ingredient added!\n");
 }
 
 void restockInventory() {
+    int found = 0;
+    int i;
+
+    if (sInventoryCount == 0) {
+        printf("\nNo inventory items available.\n");
+        return;
+    }
+
     printf("\nItems needing restock:\n");
-    for (int i = 0; i < sInventoryCount; i++) {
+    for (i = 0; i < sInventoryCount; i++) {
         if (sInventory[i].quantity < sInventory[i].threshold) {
             printf("%s (Qty: %d)\n",
                 sInventory[i].name,
-                sInventory[i].quantity
-            );
+                sInventory[i].quantity);
+            found = 1;
         }
+    }
+
+    if (!found) {
+        printf("No ingredients need restocking.\n");
     }
 }

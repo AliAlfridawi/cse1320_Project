@@ -1,56 +1,115 @@
 #include <stdio.h>
 #include "cart.h"
 #include "menu.h"
+#include "storage.h"
 
 Cart sCart;
 
+static int cartIsEmpty() {
+    int i;
+
+    for (i = 0; i < sMenuCount; i++) {
+        if (sCart.items[i] > 0) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+static void clearCart() {
+    int i;
+
+    for (i = 0; i < MAX_MENU_ITEMS; i++) {
+        sCart.items[i] = 0;
+    }
+}
+
 void BuyItem() {
-    int choice;
+    int choice = 0;
+
+    if (sMenuCount == 0) {
+        printf("\nNo menu items available.\n");
+        return;
+    }
 
     do {
-        printf("\n--- Cart ---\n");
+        printf("\n--- CART MENU ---\n");
         printf("1. View Cart\n");
         printf("2. Add to Cart\n");
         printf("3. Remove from Cart\n");
         printf("4. View Menu Items\n");
         printf("5. Buy and Complete Transaction\n");
+        printf("6. Back\n");
         printf("Choose: ");
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1: {
+            case 1:
                 ViewCart();
                 break;
-            }
-            case 2: {
+            case 2:
                 AddToCart();
                 break;
-            }
-            case 3: {
+            case 3:
                 RemoveFromCart();
                 break;
-            }
-            case 4: {
+            case 4:
                 showMenuItems();
                 break;
-            }
+            case 5:
+                if (cartIsEmpty()) {
+                    printf("Cart is empty.\n");
+                    break;
+                }
+
+                printf("Total price: %.2f\n", DetermineTotalPrice());
+                clearCart();
+                saveData();
+                printf("Transaction complete.\n");
+                return;
+            case 6:
+                printf("Returning to main menu.\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
+                break;
         }
-    } while (choice != 5);
+    } while (choice != 6);
+}
+
+void ViewCart() {
+    int i;
+
+    if (cartIsEmpty()) {
+        printf("\nCart is empty.\n");
+        return;
+    }
+
+    printf("\nNo.\tItem\tQty\tPrice\n");
+    for (i = 0; i < sMenuCount; i++) {
+        if (sCart.items[i] > 0) {
+            printf("%d\t%s\t%d\t%.2f\n",
+                i + 1,
+                sMenu[i].name,
+                sCart.items[i],
+                sMenu[i].price);
+        }
+    }
 
     printf("Total price: %.2f\n", DetermineTotalPrice());
 }
 
-void ViewCart() {
-    printf("\nItem\tQty\tPrice\n");
-    
-    for (int i = 0; i < sMenuCount; i++) {
-        printf("%s\t%d\t%f\n", sMenu[i].name, sCart.items[i], sMenu[i].price);
-    }
-}
-
 void AddToCart() {
-    int choice, qty;
+    int choice;
+    int qty;
 
+    if (sMenuCount == 0) {
+        printf("\nNo menu items available.\n");
+        return;
+    }
+
+    showMenuItems();
     printf("Enter item number (1-%d): ", sMenuCount);
     scanf("%d", &choice);
 
@@ -62,17 +121,32 @@ void AddToCart() {
     printf("Enter quantity to buy: ");
     scanf("%d", &qty);
 
+    if (qty <= 0) {
+        printf("Invalid quantity.\n");
+        return;
+    }
+
     if (qty > sMenu[choice - 1].quantity) {
         printf("Not enough items available.\n");
-    } else {
-        sMenu[choice - 1].quantity -= qty;
-        sCart.items[choice - 1] += qty;
+        return;
     }
+
+    sMenu[choice - 1].quantity -= qty;
+    sCart.items[choice - 1] += qty;
+    saveData();
+    printf("Added %d item(s) to cart.\n", qty);
 }
 
 void RemoveFromCart() {
-    int choice, qty;
+    int choice;
+    int qty;
 
+    if (cartIsEmpty()) {
+        printf("\nCart is empty.\n");
+        return;
+    }
+
+    ViewCart();
     printf("Enter item number (1-%d): ", sMenuCount);
     scanf("%d", &choice);
 
@@ -81,30 +155,37 @@ void RemoveFromCart() {
         return;
     }
 
+    if (sCart.items[choice - 1] == 0) {
+        printf("That item is not in the cart.\n");
+        return;
+    }
+
     printf("Enter quantity to remove: ");
     scanf("%d", &qty);
 
-    if (qty < 0) {
+    if (qty <= 0) {
         printf("Invalid quantity.\n");
         return;
     }
-    
-    if (qty >= sCart.items[choice - 1]) {
-        printf("Removing all items.\n");
-        qty = sCart.items[choice - 1]; // clamp the item count  
-    }
-    
-    sMenu[choice - 1].quantity += qty;
-    sCart.items[choice - 1] -= qty;   
 
-    printf("Removed %d items from cart\n", qty);
+    if (qty >= sCart.items[choice - 1]) {
+        printf("Removing all of that item.\n");
+        qty = sCart.items[choice - 1];
+    }
+
+    sMenu[choice - 1].quantity += qty;
+    sCart.items[choice - 1] -= qty;
+    saveData();
+
+    printf("Removed %d item(s) from cart.\n", qty);
 }
 
 float DetermineTotalPrice() {
     float total = 0.0f;
+    int i;
 
-    for (int i = 0; i < sMenuCount; i++) {
-        total += (float)sCart.items[i] * sMenu[i].price;
+    for (i = 0; i < sMenuCount; i++) {
+        total += (float) sCart.items[i] * sMenu[i].price;
     }
 
     return total;

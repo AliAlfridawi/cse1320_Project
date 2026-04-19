@@ -6,20 +6,24 @@
 #include "cart.h"
 #include "storage.h"
 
+int login();
+void mainMenu();
+
 int login() {
     char input[20];
 
     printf("Enter password: ");
-    scanf("%s", input);
+    scanf("%19s", input);
 
     if (strcmp(input, PASSWORD) == 0) {
         return 1;
     }
+
     return 0;
 }
 
 void mainMenu() {
-    int choice;
+    int choice = 0;
 
     do {
         printf("\n=== BAKERY MANAGEMENT SYSTEM ===\n");
@@ -31,13 +35,23 @@ void mainMenu() {
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1: inventoryMenu(); break;
-            case 2: menuMenu(); break;
-            case 3: BuyItem(); // no break statement to allow fallthrough
-            case 4: printf("Exiting system...\n"); break;
-            default: printf("Invalid choice.\n");
+            case 1:
+                inventoryMenu();
+                break;
+            case 2:
+                menuMenu();
+                break;
+            case 3:
+                BuyItem();
+                break;
+            case 4:
+                printf("Exiting system...\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
+                break;
         }
-    } while (choice != 3 && choice != 4);
+    } while (choice != 4);
 }
 
 int main() {

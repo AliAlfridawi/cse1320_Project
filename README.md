@@ -1,52 +1,108 @@
-# Bakery Management System 
+# Bakery Management System
 
-A robust, CLI-based management tool developed in C for the CSE 1320 course. This system streamlines the operations of a bakery by integrating inventory tracking, menu management, and a simplified point-of-sale interface.
+A simple command-line bakery manager written in C for CSE 1320. The program
+keeps track of ingredient inventory, bakery menu items, and a customer cart.
+It also saves data between runs using text files.
 
-## Key Features
+## Features
 
-*   **Secure Access:** Simple login system to protect administrative functions (Default Password: `bakery123`).
-*   **Inventory Control:** Track ingredient levels with custom thresholds and easy restocking capabilities.
-*   **Menu Management:** Define bakery items with pricing and quantities.
-*   **Shopping Cart:** A functional cart system that allows adding/removing items and calculates the total price for customer orders.
+- Password-protected login
+- Inventory tracking with restock thresholds
+- Menu item management with quantity and price
+- Shopping cart with add, remove, and checkout
+- Automatic saving to `inventory.txt`, `menu.txt`, and `cart.txt`
+- Multi-file source layout that is easier to read and maintain
 
-## Getting Started
+## Project Layout
 
-### Prerequisites
+- `src/` - C source and header files
+- `obj/` - object files created during build
+- `Makefile` - build commands
+- `inventory.txt` - saved ingredient data
+- `menu.txt` - saved bakery menu data
+- `cart.txt` - saved cart data
 
-*   **GCC:** The GNU Compiler Collection.
-*   **Make:** A build automation tool (standard on Linux/macOS, available via MinGW/Cygwin on Windows).
+See [src/README.md](./src/README.md) for the source code breakdown.
 
-### Build Instructions
+## Build
 
-1.  Open your terminal or command prompt in the project root.
-2.  Run the `make` command:
-    ```bash
-    make
-    ```
-3.  This will create an `obj/` directory for object files and compile the executable named `bakery_system`.
+### Windows with MSYS2 / MinGW
 
-### Running the Application
+If `mingw32-make.exe` is installed, run:
 
-Execute the compiled binary:
-```bash
-./bakery_system
+```powershell
+C:\msys64\ucrt64\bin\mingw32-make.exe
 ```
 
-## Project Structure
+### Systems with `make`
 
-*   `src/`: Contains the C source code and header files. See [src/README.md](./src/README.md) for architectural details.
-*   `doc/`: Comprehensive project documentation including architecture, test plans, and style guides.
-*   `Makefile`: Automated build script for the project.
+If your environment already has `make`, run:
 
-## Documentation Links
+```bash
+make
+```
 
-For more in-depth information, please refer to the files in the `doc/` directory:
-*   [System Architecture](./doc/architecture.md)
-*   [Interface Definitions](./doc/interfaces.md)
-*   [Testing Plan](./doc/test_plan.md)
-*   [Coding Style Guide](./doc/style_guide.md)
-*   [Product Backlog](./doc/product_backlog.md)
+## Common Make Targets
+
+- Build the program:
+
+```bash
+make
+```
+
+- Run the program after building:
+
+```bash
+make run
+```
+
+- Delete build files:
+
+```bash
+make clean
+```
+
+- Rebuild from scratch:
+
+```bash
+make rebuild
+```
+
+On this Windows setup, replace `make` with
+`C:\msys64\ucrt64\bin\mingw32-make.exe`.
+
+## Run
+
+After building, run:
+
+```powershell
+.\bakery_system.exe
+```
+
+Default password:
+
+```text
+bakery123
+```
+
+## Data Files
+
+The program stores its data in text files in the project root:
+
+- `inventory.txt` uses `name,quantity,threshold`
+- `menu.txt` uses `name,quantity,price`
+- `cart.txt` stores one cart quantity per line
+
+If a file is missing, the program starts with empty data for that section.
+If a file contains bad data, the program prints a warning and keeps running.
+
+## Notes
+
+- Item names are currently read with `scanf("%s", ...)`, so names should be
+  single words like `Bread` or `Croissant`.
+- The checkout flow clears the cart and returns to the main menu.
+- The code is intentionally straightforward and beginner-friendly.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).

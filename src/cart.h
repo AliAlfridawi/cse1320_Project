@@ -4,7 +4,7 @@
 #include "common.h"
 
 typedef struct Cart {
-    int items[MAX_MENU_ITEMS]; // an array of the counts of items in cart
+    int items[MAX_MENU_ITEMS];
 } Cart;
 
 extern Cart sCart;

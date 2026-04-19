@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "menu.h"
+#include "storage.h"
 
 MenuItem sMenu[MAX_MENU_ITEMS];
 int sMenuCount = 0;
 
 void menuMenu() {
-    int choice;
+    int choice = 0;
 
     do {
         printf("\n--- MENU ITEMS ---\n");
@@ -17,17 +18,39 @@ void menuMenu() {
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1: showMenuItems(); break;
-            case 2: addMenuItem(); break;
-            case 3: restockMenu(); break;
+            case 1:
+                showMenuItems();
+                break;
+            case 2:
+                addMenuItem();
+                break;
+            case 3:
+                restockMenu();
+                break;
+            case 4:
+                break;
+            default:
+                printf("Invalid choice.\n");
+                break;
         }
     } while (choice != 4);
 }
 
 void showMenuItems() {
-    printf("\nItem\tQty\tPrice\n");
-    for (int i = 0; i < sMenuCount; i++) {
-        printf("%s\t%d\t%f\n", sMenu[i].name, sMenu[i].quantity, sMenu[i].price);
+    int i;
+
+    if (sMenuCount == 0) {
+        printf("\nNo menu items available.\n");
+        return;
+    }
+
+    printf("\nNo.\tItem\tQty\tPrice\n");
+    for (i = 0; i < sMenuCount; i++) {
+        printf("%d\t%s\t%d\t%.2f\n",
+            i + 1,
+            sMenu[i].name,
+            sMenu[i].quantity,
+            sMenu[i].price);
     }
 }
 
@@ -38,7 +61,7 @@ void addMenuItem() {
     }
 
     printf("Enter item name: ");
-    scanf("%s", sMenu[sMenuCount].name);
+    scanf("%29s", sMenu[sMenuCount].name);
 
     printf("Enter quantity: ");
     scanf("%d", &sMenu[sMenuCount].quantity);
@@ -47,14 +70,28 @@ void addMenuItem() {
     scanf("%f", &sMenu[sMenuCount].price);
 
     sMenuCount++;
+    saveData();
     printf("Menu item added!\n");
 }
 
 void restockMenu() {
+    int found = 0;
+    int i;
+
+    if (sMenuCount == 0) {
+        printf("\nNo menu items available.\n");
+        return;
+    }
+
     printf("\nMenu items needing restock (qty < 5):\n");
-    for (int i = 0; i < sMenuCount; i++) {
+    for (i = 0; i < sMenuCount; i++) {
         if (sMenu[i].quantity < 5) {
             printf("%s (Qty: %d)\n", sMenu[i].name, sMenu[i].quantity);
+            found = 1;
         }
+    }
+
+    if (!found) {
+        printf("No menu items need restocking.\n");
     }
 }
