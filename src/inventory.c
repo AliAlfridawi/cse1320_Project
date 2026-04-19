@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "inventory.h"
 #include "storage.h"
 
@@ -54,20 +55,38 @@ void showInventory() {
 }
 
 void addIngredient() {
+    char name[30];
+    int quantity;
+    int threshold;
+    int i;
+
+    printf("Enter ingredient name: ");
+    scanf("%29s", name);
+
+    printf("Enter quantity: ");
+    scanf("%d", &quantity);
+
+    printf("Enter restock threshold: ");
+    scanf("%d", &threshold);
+
+    for (i = 0; i < sInventoryCount; i++) {
+        if (strcmp(sInventory[i].name, name) == 0) {
+            sInventory[i].quantity += quantity;
+            sInventory[i].threshold = threshold;
+            saveData();
+            printf("Ingredient quantity updated!\n");
+            return;
+        }
+    }
+
     if (sInventoryCount >= MAX_INGREDIENTS) {
         printf("Inventory full.\n");
         return;
     }
 
-    printf("Enter ingredient name: ");
-    scanf("%29s", sInventory[sInventoryCount].name);
-
-    printf("Enter quantity: ");
-    scanf("%d", &sInventory[sInventoryCount].quantity);
-
-    printf("Enter restock threshold: ");
-    scanf("%d", &sInventory[sInventoryCount].threshold);
-
+    strcpy(sInventory[sInventoryCount].name, name);
+    sInventory[sInventoryCount].quantity = quantity;
+    sInventory[sInventoryCount].threshold = threshold;
     sInventoryCount++;
     saveData();
     printf("Ingredient added!\n");

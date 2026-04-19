@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "menu.h"
 #include "storage.h"
 
@@ -55,20 +56,38 @@ void showMenuItems() {
 }
 
 void addMenuItem() {
+    char name[30];
+    int quantity;
+    float price;
+    int i;
+
+    printf("Enter item name: ");
+    scanf("%29s", name);
+
+    printf("Enter quantity: ");
+    scanf("%d", &quantity);
+
+    printf("Enter item price: ");
+    scanf("%f", &price);
+
+    for (i = 0; i < sMenuCount; i++) {
+        if (strcmp(sMenu[i].name, name) == 0) {
+            sMenu[i].quantity += quantity;
+            sMenu[i].price = price;
+            saveData();
+            printf("Menu item quantity updated!\n");
+            return;
+        }
+    }
+
     if (sMenuCount >= MAX_MENU_ITEMS) {
         printf("Menu full.\n");
         return;
     }
 
-    printf("Enter item name: ");
-    scanf("%29s", sMenu[sMenuCount].name);
-
-    printf("Enter quantity: ");
-    scanf("%d", &sMenu[sMenuCount].quantity);
-
-    printf("Enter item price: ");
-    scanf("%f", &sMenu[sMenuCount].price);
-
+    strcpy(sMenu[sMenuCount].name, name);
+    sMenu[sMenuCount].quantity = quantity;
+    sMenu[sMenuCount].price = price;
     sMenuCount++;
     saveData();
     printf("Menu item added!\n");
