@@ -7,6 +7,7 @@ OBJ_DIR = obj
 
 SRCS = \
     $(SRC_DIR)/main.c \
+    $(SRC_DIR)/input.c \
     $(SRC_DIR)/inventory.c \
     $(SRC_DIR)/menu.c \
     $(SRC_DIR)/cart.c \
@@ -14,6 +15,7 @@ SRCS = \
 
 OBJS = \
     $(OBJ_DIR)/main.o \
+    $(OBJ_DIR)/input.o \
     $(OBJ_DIR)/inventory.o \
     $(OBJ_DIR)/menu.o \
     $(OBJ_DIR)/cart.o \
@@ -24,16 +26,19 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
-$(OBJ_DIR)/main.o: $(SRC_DIR)/main.c $(SRC_DIR)/common.h $(SRC_DIR)/inventory.h $(SRC_DIR)/menu.h $(SRC_DIR)/cart.h $(SRC_DIR)/storage.h | $(OBJ_DIR)
+$(OBJ_DIR)/main.o: $(SRC_DIR)/main.c $(SRC_DIR)/common.h $(SRC_DIR)/inventory.h $(SRC_DIR)/menu.h $(SRC_DIR)/cart.h $(SRC_DIR)/storage.h $(SRC_DIR)/input.h | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/inventory.o: $(SRC_DIR)/inventory.c $(SRC_DIR)/inventory.h $(SRC_DIR)/common.h $(SRC_DIR)/storage.h | $(OBJ_DIR)
+$(OBJ_DIR)/input.o: $(SRC_DIR)/input.c $(SRC_DIR)/input.h | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/menu.o: $(SRC_DIR)/menu.c $(SRC_DIR)/menu.h $(SRC_DIR)/common.h $(SRC_DIR)/storage.h | $(OBJ_DIR)
+$(OBJ_DIR)/inventory.o: $(SRC_DIR)/inventory.c $(SRC_DIR)/inventory.h $(SRC_DIR)/common.h $(SRC_DIR)/storage.h $(SRC_DIR)/input.h | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/cart.o: $(SRC_DIR)/cart.c $(SRC_DIR)/cart.h $(SRC_DIR)/menu.h $(SRC_DIR)/common.h $(SRC_DIR)/storage.h | $(OBJ_DIR)
+$(OBJ_DIR)/menu.o: $(SRC_DIR)/menu.c $(SRC_DIR)/menu.h $(SRC_DIR)/common.h $(SRC_DIR)/storage.h $(SRC_DIR)/input.h | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/cart.o: $(SRC_DIR)/cart.c $(SRC_DIR)/cart.h $(SRC_DIR)/menu.h $(SRC_DIR)/common.h $(SRC_DIR)/storage.h $(SRC_DIR)/input.h | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/storage.o: $(SRC_DIR)/storage.c $(SRC_DIR)/storage.h $(SRC_DIR)/inventory.h $(SRC_DIR)/menu.h $(SRC_DIR)/cart.h $(SRC_DIR)/common.h | $(OBJ_DIR)

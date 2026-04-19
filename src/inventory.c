@@ -2,6 +2,7 @@
 #include <string.h>
 #include "inventory.h"
 #include "storage.h"
+#include "input.h"
 
 Ingredient sInventory[MAX_INGREDIENTS];
 int sInventoryCount = 0;
@@ -15,8 +16,7 @@ void inventoryMenu() {
         printf("2. Add Ingredient\n");
         printf("3. Restock Needed\n");
         printf("4. Back\n");
-        printf("Choose: ");
-        scanf("%d", &choice);
+        choice = readIntInput("Choose: ");
 
         switch (choice) {
             case 1:
@@ -60,14 +60,9 @@ void addIngredient() {
     int threshold;
     int i;
 
-    printf("Enter ingredient name: ");
-    scanf("%29s", name);
-
-    printf("Enter quantity: ");
-    scanf("%d", &quantity);
-
-    printf("Enter restock threshold: ");
-    scanf("%d", &threshold);
+    readLineInput("Enter ingredient name: ", name, sizeof(name));
+    quantity = readIntInput("Enter quantity: ");
+    threshold = readIntInput("Enter restock threshold: ");
 
     for (i = 0; i < sInventoryCount; i++) {
         if (strcmp(sInventory[i].name, name) == 0) {

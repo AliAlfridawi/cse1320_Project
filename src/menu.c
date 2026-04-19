@@ -2,6 +2,7 @@
 #include <string.h>
 #include "menu.h"
 #include "storage.h"
+#include "input.h"
 
 MenuItem sMenu[MAX_MENU_ITEMS];
 int sMenuCount = 0;
@@ -15,8 +16,7 @@ void menuMenu() {
         printf("2. Add Menu Item\n");
         printf("3. Restock Needed\n");
         printf("4. Back\n");
-        printf("Choose: ");
-        scanf("%d", &choice);
+        choice = readIntInput("Choose: ");
 
         switch (choice) {
             case 1:
@@ -61,14 +61,9 @@ void addMenuItem() {
     float price;
     int i;
 
-    printf("Enter item name: ");
-    scanf("%29s", name);
-
-    printf("Enter quantity: ");
-    scanf("%d", &quantity);
-
-    printf("Enter item price: ");
-    scanf("%f", &price);
+    readLineInput("Enter item name: ", name, sizeof(name));
+    quantity = readIntInput("Enter quantity: ");
+    price = readFloatInput("Enter item price: ");
 
     for (i = 0; i < sMenuCount; i++) {
         if (strcmp(sMenu[i].name, name) == 0) {

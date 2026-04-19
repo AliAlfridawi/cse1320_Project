@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "cart.h"
 #include "storage.h"
+#include "input.h"
 
 int login();
 void mainMenu();
@@ -12,8 +13,7 @@ void mainMenu();
 int login() {
     char input[20];
 
-    printf("Enter password: ");
-    scanf("%19s", input);
+    readLineInput("Enter password: ", input, sizeof(input));
 
     if (strcmp(input, PASSWORD) == 0) {
         return 1;
@@ -31,8 +31,7 @@ void mainMenu() {
         printf("2. Menu\n");
         printf("3. Buy Items\n");
         printf("4. Exit\n");
-        printf("Choose an option: ");
-        scanf("%d", &choice);
+        choice = readIntInput("Choose an option: ");
 
         switch (choice) {
             case 1:

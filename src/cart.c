@@ -2,6 +2,7 @@
 #include "cart.h"
 #include "menu.h"
 #include "storage.h"
+#include "input.h"
 
 Cart sCart;
 
@@ -41,8 +42,7 @@ void BuyItem() {
         printf("4. View Menu Items\n");
         printf("5. Buy and Complete Transaction\n");
         printf("6. Back\n");
-        printf("Choose: ");
-        scanf("%d", &choice);
+        choice = readIntInput("Choose: ");
 
         switch (choice) {
             case 1:
@@ -110,16 +110,14 @@ void AddToCart() {
     }
 
     showMenuItems();
-    printf("Enter item number (1-%d): ", sMenuCount);
-    scanf("%d", &choice);
+    choice = readIntInput("Enter item number: ");
 
     if (choice < 1 || choice > sMenuCount) {
         printf("Invalid choice.\n");
         return;
     }
 
-    printf("Enter quantity to buy: ");
-    scanf("%d", &qty);
+    qty = readIntInput("Enter quantity to buy: ");
 
     if (qty <= 0) {
         printf("Invalid quantity.\n");
@@ -147,8 +145,7 @@ void RemoveFromCart() {
     }
 
     ViewCart();
-    printf("Enter item number (1-%d): ", sMenuCount);
-    scanf("%d", &choice);
+    choice = readIntInput("Enter item number: ");
 
     if (choice < 1 || choice > sMenuCount) {
         printf("Invalid choice.\n");
@@ -160,8 +157,7 @@ void RemoveFromCart() {
         return;
     }
 
-    printf("Enter quantity to remove: ");
-    scanf("%d", &qty);
+    qty = readIntInput("Enter quantity to remove: ");
 
     if (qty <= 0) {
         printf("Invalid quantity.\n");
