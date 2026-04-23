@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "cart.h"
 #include "menu.h"
 #include "storage.h"
@@ -6,22 +7,18 @@
 
 Cart sCart;
 
-static int cartIsEmpty() {
-    int i;
-
-    for (i = 0; i < sMenuCount; i++) {
+static bool cartIsEmpty() {
+    for (int i = 0; i < sMenuCount; i++) {
         if (sCart.items[i] > 0) {
-            return 0;
+            return false;
         }
     }
 
-    return 1;
+    return true;
 }
 
 static void clearCart() {
-    int i;
-
-    for (i = 0; i < MAX_MENU_ITEMS; i++) {
+    for (int i = 0; i < MAX_MENU_ITEMS; i++) {
         sCart.items[i] = 0;
     }
 }
@@ -79,15 +76,13 @@ void BuyItem() {
 }
 
 void ViewCart() {
-    int i;
-
     if (cartIsEmpty()) {
         printf("\nCart is empty.\n");
         return;
     }
 
     printf("\nNo.\tItem\tQty\tPrice\n");
-    for (i = 0; i < sMenuCount; i++) {
+    for (int i = 0; i < sMenuCount; i++) {
         if (sCart.items[i] > 0) {
             printf("%d\t%s\t%d\t%.2f\n",
                 i + 1,
@@ -178,9 +173,8 @@ void RemoveFromCart() {
 
 float DetermineTotalPrice() {
     float total = 0.0f;
-    int i;
 
-    for (i = 0; i < sMenuCount; i++) {
+    for (int i = 0; i < sMenuCount; i++) {
         total += (float) sCart.items[i] * sMenu[i].price;
     }
 

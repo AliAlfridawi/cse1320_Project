@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "inventory.h"
 #include "storage.h"
 #include "input.h"
@@ -38,15 +39,13 @@ void inventoryMenu() {
 }
 
 void showInventory() {
-    int i;
-
     if (sInventoryCount == 0) {
         printf("\nNo inventory items available.\n");
         return;
     }
 
     printf("\nIngredient\tQty\tThreshold\n");
-    for (i = 0; i < sInventoryCount; i++) {
+    for (int i = 0; i < sInventoryCount; i++) {
         printf("%s\t\t%d\t%d\n",
             sInventory[i].name,
             sInventory[i].quantity,
@@ -58,13 +57,12 @@ void addIngredient() {
     char name[30];
     int quantity;
     int threshold;
-    int i;
 
     readLineInput("Enter ingredient name: ", name, sizeof(name));
     quantity = readIntInput("Enter quantity: ");
     threshold = readIntInput("Enter restock threshold: ");
 
-    for (i = 0; i < sInventoryCount; i++) {
+    for (int i = 0; i < sInventoryCount; i++) {
         if (strcmp(sInventory[i].name, name) == 0) {
             sInventory[i].quantity += quantity;
             sInventory[i].threshold = threshold;
@@ -88,8 +86,7 @@ void addIngredient() {
 }
 
 void restockInventory() {
-    int found = 0;
-    int i;
+    bool found = true;
 
     if (sInventoryCount == 0) {
         printf("\nNo inventory items available.\n");
@@ -97,12 +94,12 @@ void restockInventory() {
     }
 
     printf("\nItems needing restock:\n");
-    for (i = 0; i < sInventoryCount; i++) {
+    for (int i = 0; i < sInventoryCount; i++) {
         if (sInventory[i].quantity < sInventory[i].threshold) {
             printf("%s (Qty: %d)\n",
                 sInventory[i].name,
                 sInventory[i].quantity);
-            found = 1;
+            found = false;
         }
     }
 
